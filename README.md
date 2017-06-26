@@ -1,2 +1,2 @@
 # JChess
-Java Chess Programming (youtube: Software Architecture & Design)
+Java Chess Programming (youtube: Software Architecture & Design). ...going along the awsome tutorial...
