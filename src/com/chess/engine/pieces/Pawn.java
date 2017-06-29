@@ -5,6 +5,7 @@ import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Move.MajorMove;
+import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class Pawn extends Piece {
 
-    private final static int[] CANDIDATE_MOVE_COORDINATE = {8, 16};
+    private final static int[] CANDIDATE_MOVE_COORDINATE = {8, 16, 7, 9};
 
 
     Pawn(final int piecePosition, final Alliance pieceAlliance) {
@@ -28,7 +29,7 @@ public class Pawn extends Piece {
 
         for(final int currentCandidateOffset: CANDIDATE_MOVE_COORDINATE){
 
-            final int candidateDestinationCoordinate = this.piecePosition + (this.getPieceAlliance().getDirection() * currentCandidateOffset);
+            final int candidateDestinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() * currentCandidateOffset);
 
             if(!BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)){
                 continue;
@@ -38,14 +39,34 @@ public class Pawn extends Piece {
                 //TODO more work to do here (deal with promotions)!!!
                 legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
             } else if(currentCandidateOffset == 16 && this.isFirstMove()&&
-                    (BoardUtils.SECOND_ROW[this.piecePosition] && this.getPieceAlliance().isBlack())||
-                    (BoardUtils.SEVENTH_ROW[this.piecePosition] && this.getPieceAlliance().isWhite())){
+                    (BoardUtils.SECOND_ROW[this.piecePosition] && this.pieceAlliance.isBlack())||
+                    (BoardUtils.SEVENTH_ROW[this.piecePosition] && this.pieceAlliance.isWhite())){
                 final int behidnCandidateDestinationCoordinate = this.piecePosition + (this.pieceAlliance.getDirection() * 8);
                 if(!board.getTile(behidnCandidateDestinationCoordinate).isTileOccupied() && !board.getTile(candidateDestinationCoordinate).isTileOccupied()){
                     legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
                 }
+            } else if(currentCandidateOffset == 7 &&
+                      !((BoardUtils.EIGHTH_COLUMN[this.piecePosition] && this.pieceAlliance.isWhite() ||
+                       (BoardUtils.FIRST_COLUMN[this.piecePosition] && this.pieceAlliance.isBlack())))){
+                if(board.getTile(candidateDestinationCoordinate).isTileOccupied()){
+                    final Piece pieceOnCandidate = board.getTile(candidateDestinationCoordinate).getPiece();
+                    if(this.pieceAlliance != pieceOnCandidate.getPieceAlliance()){
+                        //TODO more to do here
+                        legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
+                    }
+                }
+            } else if(currentCandidateOffset == 9 &&
+                    !((BoardUtils.EIGHTH_COLUMN[this.piecePosition] && this.pieceAlliance.isBlack() ||
+                     (BoardUtils.FIRST_COLUMN[this.piecePosition] && this.pieceAlliance.isWhite())))) {
+                if(board.getTile(candidateDestinationCoordinate).isTileOccupied()){
+                    final Piece pieceOnCandidate = board.getTile(candidateDestinationCoordinate).getPiece();
+                    if(this.pieceAlliance != pieceOnCandidate.getPieceAlliance()){
+                        //TODO more to do here
+                        legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
+                    }
+                }
             }
         }
-        return legalMoves;
+        return ImmutableList.copyOf(legalMoves);
     }
 }
