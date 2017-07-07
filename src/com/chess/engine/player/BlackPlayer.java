@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static com.chess.engine.board.Move.*;
+
 /**
  * Created by Михаил on 01.07.2017.
  */
@@ -51,12 +53,12 @@ public class BlackPlayer extends Player {
                     if(Player.calculateAttacksOnTile(5, opponentsLegals).isEmpty() &&
                        Player.calculateAttacksOnTile(6, opponentsLegals).isEmpty() &&
                             rookTile.getPiece().getPieceType().isRook()){
-                        kingCastles.add(new Move.KingSideCastleMove(this.board,
-                                                                    this.playerKing,
-                                                 6,
-                                                                    (Rook)rookTile.getPiece(),
-                                                                    rookTile.getTileCoordinate(),
-                                                 5));
+                        kingCastles.add(new KingSideCastleMove(this.board,
+                                                               this.playerKing,
+                                            6,
+                                                               (Rook)rookTile.getPiece(),
+                                                               rookTile.getTileCoordinate(),
+                                            5));
                     }
                 }
             }
@@ -65,7 +67,7 @@ public class BlackPlayer extends Player {
                !this.board.getTile(3).isTileOccupied()){
                 final Tile rookTile = this.board.getTile(0);
                 if(rookTile.isTileOccupied() && rookTile.getPiece().isFirstMove()){
-                    kingCastles.add(new Move.QueenSideCastleMove(this.board,
+                    kingCastles.add(new QueenSideCastleMove(this.board,
                                                                  this.playerKing,
                                               2,
                                                                  (Rook)rookTile.getPiece(),
