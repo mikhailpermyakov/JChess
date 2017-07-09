@@ -16,6 +16,10 @@ public class Table {
     private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(600, 600);
     private final static Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
     private final static Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
+
+    private final Color lightTileColor = Color.decode("#FFFACD");
+    private final Color darkTileColor = Color.decode("#593E1A");
+
     public Table(){
         this.gameFrame = new JFrame("JChess");
         this.gameFrame.setLayout(new BorderLayout());
@@ -26,13 +30,11 @@ public class Table {
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         this.gameFrame.setVisible(true);
     }
-
     private JMenuBar createTableMenuBar() {
         final JMenuBar tableMenuBar = new JMenuBar();
         tableMenuBar.add(createFileMenu());
         return tableMenuBar;
     }
-
     private JMenu createFileMenu() {
         final JMenu fileMenu = new JMenu("File");
         final JMenuItem openPGN = new JMenuItem("Load PGN File");
@@ -43,6 +45,16 @@ public class Table {
             }
         });
         fileMenu.add(openPGN);
+
+        final JMenuItem exitMenuItem = new JMenuItem("Exit");
+        exitMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                System.exit(0);
+            }
+        });
+        fileMenu.add(exitMenuItem);
         return fileMenu;
     }
     private class BoardPanel extends JPanel{
@@ -70,10 +82,18 @@ public class Table {
             assignTileColor();
             validate();
         }
-
         private void assignTileColor() {
+            if (BoardUtils.FIRST_ROW[this.tileId] ||
+                BoardUtils.THIRD_ROW[this.tileId] ||
+                BoardUtils.FIFTH_ROW[this.tileId] ||
+                BoardUtils.SEVENTH_ROW[this.tileId]){
+              setBackground(this.tileId % 2 == 0 ? lightTileColor : darkTileColor);
+            } else if(BoardUtils.SECOND_ROW[this.tileId] ||
+                      BoardUtils.FOURTH_ROW[this.tileId] ||
+                      BoardUtils.SIXTH_ROW[this.tileId]  ||
+                      BoardUtils.EIGHTH_ROW[this.tileId]){
+                setBackground(this.tileId % 2 != 0 ? lightTileColor : darkTileColor);
+            }
         }
-
     }
-
 }
