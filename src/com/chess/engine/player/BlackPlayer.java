@@ -62,11 +62,15 @@ public class BlackPlayer extends Player {
                     }
                 }
             }
+            //blacks queen side castle
             if(!this.board.getTile(1).isTileOccupied() &&
                !this.board.getTile(2).isTileOccupied() &&
                !this.board.getTile(3).isTileOccupied()){
                 final Tile rookTile = this.board.getTile(0);
-                if(rookTile.isTileOccupied() && rookTile.getPiece().isFirstMove()){
+                if(rookTile.isTileOccupied() && rookTile.getPiece().isFirstMove() &&
+                   Player.calculateAttacksOnTile(2, opponentsLegals).isEmpty() &&
+                   Player.calculateAttacksOnTile(3, opponentsLegals).isEmpty() &&
+                   rookTile.getPiece().getPieceType().isRook()){//an excess check. it can only be the rook that moves for the first time (previous check)
                     kingCastles.add(new QueenSideCastleMove(this.board,
                                                                  this.playerKing,
                                               2,
